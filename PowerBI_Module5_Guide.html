@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 4 – Power BI Data Cleansing &amp; Transformation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#272727;--surface:#2f2f2f;--card:#333;
+  --border:rgba(255,255,255,.09);--border-hi:rgba(255,255,255,.16);
+  --amber:#E8A020;--amber-dim:rgba(232,160,32,.13);
+  --text:#f0f0f0;--muted:#aaa;--subtle:#c8c8c8;
+  --green:#4caf7d;
+  /* Font Variables */
+  --font-header: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-header);
+  font-weight: 700; /* Inter Bold */
+  color: #fff;
+  line-height: 1.2;
+}
+
+.container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+/* Header & Intro */
+header { margin-bottom: 3.5rem; }
+.mod-num { 
+  display: inline-block; padding: .3rem .8rem; background: var(--amber-dim); 
+  color: var(--amber); border-radius: 6px; font-weight: 600; font-size: .85rem; margin-bottom: 1rem;
+}
+h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 1rem; letter-spacing: -0.02em; }
+.intro-p { font-size: 1.15rem; color: var(--subtle); max-width: 750px; }
+
+/* Sticky Progress */
+.progress-wrap {
+  position: sticky; top: 0; z-index: 100; background: var(--bg);
+  padding: 1rem 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem;
+}
+.progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem; }
+.progress-info span { font-weight: 600; font-size: .9rem; }
+.progress-bg { height: 8px; background: var(--surface); border-radius: 4px; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--amber); width: 0%; transition: width .4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* Step Cards */
+.step-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 2rem; margin-bottom: 2rem; transition: border-color .3s;
+}
+.step-card:hover { border-color: var(--border-hi); }
+.step-header { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.step-num {
+  flex-shrink: 0; width: 32px; height: 32px; background: var(--surface);
+  border: 1px solid var(--border-hi); border-radius: 8px;
+  display: grid; place-items: center; font-weight: 700; color: var(--amber); font-size: .9rem;
+}
+.step-title { font-size: 1.4rem; }
+
+/* Checklist */
+.checklist { display: flex; flex-direction: column; gap: .75rem; }
+.step-item {
+  display: flex; align-items: flex-start; gap: 1rem; padding: 1rem;
+  background: var(--surface); border-radius: 12px; cursor: pointer;
+  transition: all .2s; border: 1px solid transparent;
+}
+.step-item:hover { border-color: var(--amber); transform: translateX(4px); }
+.step-item.checked { opacity: .6; border-color: transparent; transform: none; }
+.check-box {
+  width: 20px; height: 20px; border: 2px solid var(--border-hi);
+  border-radius: 5px; flex-shrink: 0; margin-top: 3px; position: relative;
+  transition: all .2s;
+}
+.step-item.checked .check-box { background: var(--green); border-color: var(--green); }
+.step-item.checked .check-box::after {
+  content: "✓"; position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 12px;
+}
+.item-text { font-size: 1rem; color: var(--text); }
+.step-item.checked .item-text { text-decoration: line-through; }
+
+/* Code Blocks */
+code, .code-snippet { font-family: var(--font-mono); font-size: 0.9rem; background: #1a1a1a; padding: 0.2rem 0.4rem; border-radius: 4px; color: #e8a020; }
+.code-block {
+  display: block; padding: 1rem; margin: 1rem 0; overflow-x: auto;
+  border-left: 3px solid var(--amber); line-height: 1.5;
+}
+
+/* Image Thumbnails */
+.img-container { margin: 1rem 0; position: relative; border-radius: 12px; overflow: hidden; cursor: zoom-in; }
+.img-container img { width: 100%; display: block; filter: brightness(0.9); transition: filter 0.3s; }
+.img-container:hover img { filter: brightness(1.1); }
+.img-label {
+  position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7);
+  padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; color: #fff;
+}
+
+/* Lightbox */
+#lightbox {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000;
+  display: none; place-items: center; padding: 2rem; cursor: zoom-out;
+}
+#lightbox.open { display: grid; }
+#lightbox img { max-width: 90%; max-height: 90vh; border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+
+/* Tips */
+.tip {
+  margin-top: 1.5rem; padding: 1rem; background: rgba(232, 160, 32, 0.05);
+  border-radius: 12px; border: 1px dashed var(--amber); display: flex; gap: .75rem;
+}
+.tip-icon { color: var(--amber); font-weight: 700; font-size: 1.2rem; }
+.tip-content { font-size: .95rem; color: var(--subtle); font-style: italic; }
+
+/* Return Top */
+#returnTop {
+  position: fixed; bottom: 2rem; right: 2rem; width: 44px; height: 44px;
+  background: var(--amber); color: #000; border-radius: 50%; border: none;
+  cursor: pointer; opacity: 0; transform: translateY(20px); transition: all .3s;
+  display: grid; place-items: center; font-weight: 700; box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+#returnTop.visible { opacity: 1; transform: translateY(0); }
+
+/* Congrats Bar */
+#congratsBar {
+  position: fixed; bottom: 0; left: 0; right: 0; background: var(--green);
+  color: #fff; padding: 1rem; text-align: center; font-weight: 700;
+  transform: translateY(100%); transition: transform .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+#congratsBar.show { transform: translateY(0); }
+
+@media (max-width: 768px) {
+  .container { padding: 1.5rem 1rem; }
+  .step-card { padding: 1.5rem; }
+  h1 { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="mod-num">Module 4</div>
+    <h1>Data Cleansing &amp; Transformation</h1>
+    <p class="intro-p">Master the Power Query Editor to shape, clean, and optimize your data before building visualizations.</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-info">
+      <span>Training Progress</span>
+      <span id="progressCount">0/14</span>
+    </div>
+    <div class="progress-bg">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
+
+  <!-- Step 1 -->
+  <div class="step-card" data-num="1">
+    <div class="step-header">
+      <div class="step-num">01</div>
+      <h2 class="step-title">Entering Power Query</h2>
+    </div>
+    <div class="checklist">
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Click <strong>Transform Data</strong> on the Home ribbon to open the Power Query Editor.</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Identify the <strong>Queries Pane</strong> (left), <strong>Data Preview</strong> (center), and <strong>Applied Steps</strong> (right).</div>
+      </div>
+    </div>
+    <div class="tip">
+      <div class="tip-icon">💡</div>
+      <div class="tip-content">Every change you make is recorded in 'Applied Steps'. You can delete or re-order them at any time.</div>
+    </div>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="step-card" data-num="2">
+    <div class="step-header">
+      <div class="step-num">02</div>
+      <h2 class="step-title">Column Hygiene</h2>
+    </div>
+    <div class="checklist">
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Select multiple columns using <code>Ctrl</code> and click <strong>Remove Other Columns</strong> to reduce data noise.</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Double-click column headers to rename them into user-friendly titles (e.g., "Cust_ID" to "Customer ID").</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Ensure every column has the correct <strong>Data Type</strong> (Text, Decimal Number, Date, etc.) via the icon next to the header.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="step-card" data-num="3">
+    <div class="step-header">
+      <div class="step-num">03</div>
+      <h2 class="step-title">Handling Nulls &amp; Errors</h2>
+    </div>
+    <div class="checklist">
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Use <strong>Replace Values</strong> to fill nulls with "0" or "Unknown".</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Right-click a column and select <strong>Remove Errors</strong> if you have unfixable data artifacts.</div>
+      </div>
+    </div>
+    <div class="img-container" onclick="openLightbox('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200')">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" alt="Power Query Preview">
+      <div class="img-label">UI Preview: Applied Steps Pane</div>
+    </div>
+  </div>
+
+  <!-- Step 4 -->
+  <div class="step-card" data-num="4">
+    <div class="step-header">
+      <div class="step-num">04</div>
+      <h2 class="step-title">Text Transformations</h2>
+    </div>
+    <div class="checklist">
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Use <strong>Split Column by Delimiter</strong> (e.g., split "City, State" by the comma).</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Apply <strong>Format > Trim</strong> to remove trailing whitespace from imported text.</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Apply <strong>Format > Capitalize Each Word</strong> for consistent naming conventions.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5 -->
+  <div class="step-card" data-num="5">
+    <div class="step-header">
+      <div class="step-num">05</div>
+      <h2 class="step-title">Advanced Transformations</h2>
+    </div>
+    <div class="checklist">
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text"><strong>Unpivot Columns:</strong> Convert attribute columns into a single attribute/value pair for easier analysis.</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text"><strong>Conditional Column:</strong> Use 'Add Column' to create logic like <code>if [Sales] > 1000 then "High" else "Low"</code>.</div>
+      </div>
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text"><strong>Merge Queries:</strong> Join two tables (like a VLOOKUP) based on a matching ID column.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Step -->
+  <div class="step-card" data-num="6">
+    <div class="step-header">
+      <div class="step-num">06</div>
+      <h2 class="step-title">Loading the Data</h2>
+    </div>
+    <div class="checklist">
+      <div class="step-item" onclick="toggleCheck(this)">
+        <div class="check-box"></div>
+        <div class="item-text">Click <strong>Close &amp; Apply</strong> to save your changes and load the clean data into the Model.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer style="margin-top: 4rem; text-align: center; color: var(--muted); border-top: 1px solid var(--border); padding-top: 2rem;">
+    <p>&copy; 2024 Power BI Training Series • Module 4 Guide</p>
+  </footer>
+</div>
+
+<button id="returnTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<div id="congratsBar">🎉 All transformation tasks completed! Data is ready for modeling.</div>
+
+<div id="lightbox" onclick="this.classList.remove('open'); document.body.style.overflow='auto'">
+  <img id="lbImg" src="" alt="Zoomed Preview">
+</div>
+
+<script>
+const TOTAL = 14;
+let done = new Set();
+
+// Show/hide Return to Top button
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('returnTop');
+  btn.classList.toggle('visible', window.scrollY > 400);
+});
+
+function toggleCheck(row) {
+  const item = row.closest('.step-item');
+  item.classList.toggle('checked');
+  const card = item.closest('.step-card');
+  const num = card.dataset.num;
+  const all = card.querySelectorAll('.step-item').length;
+  const checked = card.querySelectorAll('.step-item.checked').length;
+  
+  // Calculate which specific sub-tasks are done across all cards
+  const allItems = document.querySelectorAll('.step-item');
+  done = new Set();
+  allItems.forEach((el, idx) => {
+    if(el.classList.contains('checked')) done.add(idx);
+  });
+  
+  updateProg();
+}
+
+function updateProg() {
+  const pct = Math.round((done.size / TOTAL) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = done.size + '/' + TOTAL;
+  
+  const bar = document.getElementById('congratsBar');
+  if (done.size === TOTAL) {
+    bar.classList.add('show');
+  } else {
+    bar.classList.remove('show');
+  }
+}
+
+function openLightbox(src) {
+  document.getElementById('lbImg').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+</script>
+
+</body>
+</html>

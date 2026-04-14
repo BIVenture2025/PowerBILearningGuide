@@ -1,0 +1,670 @@
+<h2 class="sr-only">Construction and property development analytics platform with five modules: Executive Control Tower, Cost Intelligence, Timeline Control, Opportunity Intelligence, and Workforce Analytics</h2>
+
+<div style="padding: 1.5rem 0;">
+
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;">
+  <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #1D9E75 0%, #0F6E56 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 9h.01M15 9h.01M9 13h.01M15 13h.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div>
+    <p style="margin: 0; font-size: 18px; font-weight: 500;">Construction & Development Analytics</p>
+    <p style="margin: 0; font-size: 13px; color: var(--color-text-secondary);">Malaysia Region • Live Dashboard</p>
+  </div>
+  <div style="margin-left: auto; display: flex; gap: 8px;">
+    <select id="project-filter" style="font-size: 13px; padding: 6px 12px;">
+      <option>All Projects</option>
+      <option>Setia Alam Phase 3</option>
+      <option>Mont Kiara Residences</option>
+      <option>Eco Horizon Iskandar</option>
+      <option>Cyberjaya Gateway</option>
+    </select>
+    <select id="period-filter" style="font-size: 13px; padding: 6px 12px;">
+      <option>Last 30 Days</option>
+      <option>Last 90 Days</option>
+      <option>YTD 2026</option>
+      <option>Custom Range</option>
+    </select>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 1.5rem;">
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
+    <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px;">Portfolio GDV</p>
+    <p style="font-size: 22px; font-weight: 500; margin: 0;">RM 2.4B</p>
+    <p style="font-size: 11px; color: #1D9E75; margin: 4px 0 0;">↑ 12% vs last year</p>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
+    <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px;">Active Projects</p>
+    <p style="font-size: 22px; font-weight: 500; margin: 0;">14</p>
+    <p style="font-size: 11px; color: var(--color-text-secondary); margin: 4px 0 0;">3 launching Q2</p>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
+    <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px;">Avg Margin</p>
+    <p style="font-size: 22px; font-weight: 500; margin: 0;">18.3%</p>
+    <p style="font-size: 11px; color: #D85A30; margin: 4px 0 0;">↓ 1.2% erosion risk</p>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
+    <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px;">CPI (Cost Index)</p>
+    <p style="font-size: 22px; font-weight: 500; margin: 0;">0.97</p>
+    <p style="font-size: 11px; color: #BA7517; margin: 4px 0 0;">⚠ Watch threshold</p>
+  </div>
+  <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
+    <p style="font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px;">SPI (Schedule)</p>
+    <p style="font-size: 22px; font-weight: 500; margin: 0;">0.94</p>
+    <p style="font-size: 11px; color: #D85A30; margin: 4px 0 0;">2 projects behind</p>
+  </div>
+</div>
+
+<div style="display: flex; gap: 8px; margin-bottom: 1rem; border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 8px;">
+  <button id="tab-exec" onclick="switchModule('exec')" style="padding: 8px 16px; border-radius: var(--border-radius-md); font-size: 13px; font-weight: 500; background: var(--color-background-info); color: var(--color-text-info); border: none;">Executive Tower</button>
+  <button id="tab-cost" onclick="switchModule('cost')" style="padding: 8px 16px; border-radius: var(--border-radius-md); font-size: 13px; background: transparent; border: 0.5px solid var(--color-border-tertiary);">Cost Intelligence</button>
+  <button id="tab-timeline" onclick="switchModule('timeline')" style="padding: 8px 16px; border-radius: var(--border-radius-md); font-size: 13px; background: transparent; border: 0.5px solid var(--color-border-tertiary);">Timeline Control</button>
+  <button id="tab-opp" onclick="switchModule('opp')" style="padding: 8px 16px; border-radius: var(--border-radius-md); font-size: 13px; background: transparent; border: 0.5px solid var(--color-border-tertiary);">Opportunity Intel</button>
+  <button id="tab-workforce" onclick="switchModule('workforce')" style="padding: 8px 16px; border-radius: var(--border-radius-md); font-size: 13px; background: transparent; border: 0.5px solid var(--color-border-tertiary);">Workforce</button>
+</div>
+
+<div id="module-exec">
+  <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">90-Day Cashflow Projection (RM millions)</p>
+      <div style="position: relative; height: 220px;">
+        <canvas id="cashflow-chart"></canvas>
+      </div>
+    </div>
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Smart Alerts</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="background: #FCEBEB; border-left: 3px solid #E24B4A; padding: 10px 12px; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;">
+          <p style="font-size: 12px; font-weight: 500; color: #791F1F; margin: 0;">Margin Alert</p>
+          <p style="font-size: 11px; color: #A32D2D; margin: 4px 0 0;">Mont Kiara Block C margin fell to 14.2%</p>
+        </div>
+        <div style="background: #FAEEDA; border-left: 3px solid #EF9F27; padding: 10px 12px; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;">
+          <p style="font-size: 12px; font-weight: 500; color: #633806; margin: 0;">Approval Delay</p>
+          <p style="font-size: 11px; color: #854F0B; margin: 4px 0 0;">MBPJ approval for Eco Horizon delayed 18 days</p>
+        </div>
+        <div style="background: #FAEEDA; border-left: 3px solid #EF9F27; padding: 10px 12px; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;">
+          <p style="font-size: 12px; font-weight: 500; color: #633806; margin: 0;">Material Cost</p>
+          <p style="font-size: 11px; color: #854F0B; margin: 4px 0 0;">Steel rebar prices up 8% — reforecast advised</p>
+        </div>
+        <div style="background: #E6F1FB; border-left: 3px solid #378ADD; padding: 10px 12px; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;">
+          <p style="font-size: 12px; font-weight: 500; color: #0C447C; margin: 0;">Opportunity</p>
+          <p style="font-size: 11px; color: #185FA5; margin: 4px 0 0;">Competitor delay in Setia Alam — accelerate launch?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <p style="font-size: 14px; font-weight: 500; margin: 24px 0 12px;">Project Risk Matrix</p>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0;">Setia Alam Ph3</p>
+        <span style="background: #E1F5EE; color: #085041; font-size: 10px; padding: 3px 8px; border-radius: 4px;">On Track</span>
+      </div>
+      <div style="display: flex; gap: 16px; font-size: 11px; color: var(--color-text-secondary);">
+        <span>CPI: <strong style="color: var(--color-text-primary);">1.02</strong></span>
+        <span>SPI: <strong style="color: var(--color-text-primary);">1.01</strong></span>
+      </div>
+      <div style="margin-top: 8px; height: 4px; background: var(--color-border-tertiary); border-radius: 2px;">
+        <div style="width: 68%; height: 100%; background: #1D9E75; border-radius: 2px;"></div>
+      </div>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 4px 0 0;">68% complete</p>
+    </div>
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0;">Mont Kiara Res</p>
+        <span style="background: #FCEBEB; color: #791F1F; font-size: 10px; padding: 3px 8px; border-radius: 4px;">At Risk</span>
+      </div>
+      <div style="display: flex; gap: 16px; font-size: 11px; color: var(--color-text-secondary);">
+        <span>CPI: <strong style="color: #E24B4A;">0.91</strong></span>
+        <span>SPI: <strong style="color: #BA7517;">0.94</strong></span>
+      </div>
+      <div style="margin-top: 8px; height: 4px; background: var(--color-border-tertiary); border-radius: 2px;">
+        <div style="width: 42%; height: 100%; background: #E24B4A; border-radius: 2px;"></div>
+      </div>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 4px 0 0;">42% complete</p>
+    </div>
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0;">Eco Horizon</p>
+        <span style="background: #FAEEDA; color: #633806; font-size: 10px; padding: 3px 8px; border-radius: 4px;">Watch</span>
+      </div>
+      <div style="display: flex; gap: 16px; font-size: 11px; color: var(--color-text-secondary);">
+        <span>CPI: <strong style="color: var(--color-text-primary);">0.98</strong></span>
+        <span>SPI: <strong style="color: #BA7517;">0.89</strong></span>
+      </div>
+      <div style="margin-top: 8px; height: 4px; background: var(--color-border-tertiary); border-radius: 2px;">
+        <div style="width: 31%; height: 100%; background: #EF9F27; border-radius: 2px;"></div>
+      </div>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 4px 0 0;">31% complete</p>
+    </div>
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0;">Cyberjaya Gate</p>
+        <span style="background: #E1F5EE; color: #085041; font-size: 10px; padding: 3px 8px; border-radius: 4px;">On Track</span>
+      </div>
+      <div style="display: flex; gap: 16px; font-size: 11px; color: var(--color-text-secondary);">
+        <span>CPI: <strong style="color: var(--color-text-primary);">1.04</strong></span>
+        <span>SPI: <strong style="color: var(--color-text-primary);">0.99</strong></span>
+      </div>
+      <div style="margin-top: 8px; height: 4px; background: var(--color-border-tertiary); border-radius: 2px;">
+        <div style="width: 15%; height: 100%; background: #1D9E75; border-radius: 2px;"></div>
+      </div>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 4px 0 0;">15% complete</p>
+    </div>
+  </div>
+</div>
+
+<div id="module-cost" style="display: none;">
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Budget vs Actual by Trade (RM '000)</p>
+      <div style="position: relative; height: 260px;">
+        <canvas id="cost-trade-chart"></canvas>
+      </div>
+    </div>
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Variation Order Trends</p>
+      <div style="position: relative; height: 260px;">
+        <canvas id="vo-trend-chart"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <p style="font-size: 14px; font-weight: 500; margin: 24px 0 12px;">Malaysia Material Price Index (CIDB)</p>
+  <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px;">
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Steel Rebar</p>
+      <p style="font-size: 16px; font-weight: 500; margin: 4px 0;">RM 3,420/t</p>
+      <p style="font-size: 11px; color: #E24B4A; margin: 0;">↑ 8.2% MoM</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Cement (OPC)</p>
+      <p style="font-size: 16px; font-weight: 500; margin: 4px 0;">RM 22.50/bag</p>
+      <p style="font-size: 11px; color: #1D9E75; margin: 0;">↓ 1.1% MoM</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Ready-Mix</p>
+      <p style="font-size: 16px; font-weight: 500; margin: 4px 0;">RM 285/m³</p>
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">→ Stable</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Sand</p>
+      <p style="font-size: 16px; font-weight: 500; margin: 4px 0;">RM 68/t</p>
+      <p style="font-size: 11px; color: #BA7517; margin: 0;">↑ 3.5% MoM</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Diesel</p>
+      <p style="font-size: 16px; font-weight: 500; margin: 4px 0;">RM 3.35/L</p>
+      <p style="font-size: 11px; color: #E24B4A; margin: 0;">↑ 5.8% MoM</p>
+    </div>
+  </div>
+  
+  <p style="font-size: 14px; font-weight: 500; margin: 24px 0 12px;">Subcontractor Performance</p>
+  <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+    <thead>
+      <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+        <th style="text-align: left; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Subcontractor</th>
+        <th style="text-align: left; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Trade</th>
+        <th style="text-align: right; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Contract (RM)</th>
+        <th style="text-align: right; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Claims</th>
+        <th style="text-align: center; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">CIDB Score</th>
+        <th style="text-align: center; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Risk</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+        <td style="padding: 10px 0;">Mega Structure Sdn Bhd</td>
+        <td style="padding: 10px 0;">Structure</td>
+        <td style="text-align: right; padding: 10px 0;">12,500,000</td>
+        <td style="text-align: right; padding: 10px 0;">78%</td>
+        <td style="text-align: center; padding: 10px 0;">G7</td>
+        <td style="text-align: center; padding: 10px 0;"><span style="background: #E1F5EE; color: #085041; padding: 2px 8px; border-radius: 4px; font-size: 10px;">Low</span></td>
+      </tr>
+      <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+        <td style="padding: 10px 0;">Premier M&E Solutions</td>
+        <td style="padding: 10px 0;">M&E</td>
+        <td style="text-align: right; padding: 10px 0;">8,200,000</td>
+        <td style="text-align: right; padding: 10px 0;">92%</td>
+        <td style="text-align: center; padding: 10px 0;">G6</td>
+        <td style="text-align: center; padding: 10px 0;"><span style="background: #FCEBEB; color: #791F1F; padding: 2px 8px; border-radius: 4px; font-size: 10px;">High</span></td>
+      </tr>
+      <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+        <td style="padding: 10px 0;">Quality Finishes Bhd</td>
+        <td style="padding: 10px 0;">Finishes</td>
+        <td style="text-align: right; padding: 10px 0;">4,800,000</td>
+        <td style="text-align: right; padding: 10px 0;">65%</td>
+        <td style="text-align: center; padding: 10px 0;">G5</td>
+        <td style="text-align: center; padding: 10px 0;"><span style="background: #FAEEDA; color: #633806; padding: 2px 8px; border-radius: 4px; font-size: 10px;">Medium</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="module-timeline" style="display: none;">
+  <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Master Development Timeline</p>
+  <div style="overflow-x: auto;">
+    <div style="min-width: 800px; position: relative; padding: 12px 0;">
+      <div style="display: flex; border-bottom: 0.5px solid var(--color-border-tertiary); padding-bottom: 8px; margin-bottom: 12px;">
+        <div style="width: 160px; font-size: 11px; color: var(--color-text-secondary);">Project</div>
+        <div style="flex: 1; display: flex; justify-content: space-between; font-size: 10px; color: var(--color-text-secondary);">
+          <span>Q1'25</span><span>Q2'25</span><span>Q3'25</span><span>Q4'25</span><span>Q1'26</span><span>Q2'26</span><span>Q3'26</span><span>Q4'26</span>
+        </div>
+      </div>
+      
+      <div style="display: flex; align-items: center; margin-bottom: 16px;">
+        <div style="width: 160px; font-size: 12px;">Setia Alam Ph3</div>
+        <div style="flex: 1; position: relative; height: 24px;">
+          <div style="position: absolute; left: 0%; width: 68%; height: 100%; background: linear-gradient(90deg, #1D9E75 68%, var(--color-border-tertiary) 68%); border-radius: 4px; display: flex; align-items: center; padding: 0 8px;">
+            <span style="font-size: 10px; color: white;">68% — Structure complete</span>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: flex; align-items: center; margin-bottom: 16px;">
+        <div style="width: 160px; font-size: 12px;">Mont Kiara Res</div>
+        <div style="flex: 1; position: relative; height: 24px;">
+          <div style="position: absolute; left: 10%; width: 75%; height: 100%; background: linear-gradient(90deg, #E24B4A 56%, var(--color-border-tertiary) 56%); border-radius: 4px; display: flex; align-items: center; padding: 0 8px;">
+            <span style="font-size: 10px; color: white;">42% — M&E delayed</span>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: flex; align-items: center; margin-bottom: 16px;">
+        <div style="width: 160px; font-size: 12px;">Eco Horizon</div>
+        <div style="flex: 1; position: relative; height: 24px;">
+          <div style="position: absolute; left: 25%; width: 60%; height: 100%; background: linear-gradient(90deg, #EF9F27 52%, var(--color-border-tertiary) 52%); border-radius: 4px; display: flex; align-items: center; padding: 0 8px;">
+            <span style="font-size: 10px; color: white;">31% — MBPJ pending</span>
+          </div>
+        </div>
+      </div>
+      
+      <div style="display: flex; align-items: center;">
+        <div style="width: 160px; font-size: 12px;">Cyberjaya Gate</div>
+        <div style="flex: 1; position: relative; height: 24px;">
+          <div style="position: absolute; left: 50%; width: 50%; height: 100%; background: linear-gradient(90deg, #1D9E75 30%, var(--color-border-tertiary) 30%); border-radius: 4px; display: flex; align-items: center; padding: 0 8px;">
+            <span style="font-size: 10px; color: white;">15% — On schedule</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px;">
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Delay Root Cause Analysis</p>
+      <div style="position: relative; height: 200px;">
+        <canvas id="delay-cause-chart"></canvas>
+      </div>
+    </div>
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Authority Approval Cycle (days)</p>
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+            <span>DBKL (Kuala Lumpur)</span>
+            <span style="font-weight: 500;">45 days avg</span>
+          </div>
+          <div style="height: 8px; background: var(--color-border-tertiary); border-radius: 4px;">
+            <div style="width: 60%; height: 100%; background: #378ADD; border-radius: 4px;"></div>
+          </div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+            <span>MBPJ (Petaling Jaya)</span>
+            <span style="font-weight: 500; color: #E24B4A;">68 days avg</span>
+          </div>
+          <div style="height: 8px; background: var(--color-border-tertiary); border-radius: 4px;">
+            <div style="width: 90%; height: 100%; background: #E24B4A; border-radius: 4px;"></div>
+          </div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+            <span>MPAJ (Ampang Jaya)</span>
+            <span style="font-weight: 500;">38 days avg</span>
+          </div>
+          <div style="height: 8px; background: var(--color-border-tertiary); border-radius: 4px;">
+            <div style="width: 50%; height: 100%; background: #1D9E75; border-radius: 4px;"></div>
+          </div>
+        </div>
+        <div>
+          <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
+            <span>MPS (Sepang)</span>
+            <span style="font-weight: 500;">42 days avg</span>
+          </div>
+          <div style="height: 8px; background: var(--color-border-tertiary); border-radius: 4px;">
+            <div style="width: 56%; height: 100%; background: #378ADD; border-radius: 4px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="module-opp" style="display: none;">
+  <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Land Bank Pipeline</p>
+  <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px;">
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0;">Rawang 42 Acres</p>
+        <span style="background: #E6F1FB; color: #0C447C; font-size: 10px; padding: 3px 8px; border-radius: 4px;">Evaluation</span>
+      </div>
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0 0 8px;">Mixed development • Freehold</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+        <div><span style="color: var(--color-text-secondary);">Est. GDV:</span> <strong>RM 380M</strong></div>
+        <div><span style="color: var(--color-text-secondary);">IRR:</span> <strong style="color: #1D9E75;">18.5%</strong></div>
+        <div><span style="color: var(--color-text-secondary);">Land PSF:</span> <strong>RM 85</strong></div>
+        <div><span style="color: var(--color-text-secondary);">Score:</span> <strong>82/100</strong></div>
+      </div>
+    </div>
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0;">Puchong South 15 Acres</p>
+        <span style="background: #FAEEDA; color: #633806; font-size: 10px; padding: 3px 8px; border-radius: 4px;">Negotiation</span>
+      </div>
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0 0 8px;">High-rise residential • Leasehold</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+        <div><span style="color: var(--color-text-secondary);">Est. GDV:</span> <strong>RM 520M</strong></div>
+        <div><span style="color: var(--color-text-secondary);">IRR:</span> <strong style="color: #BA7517;">14.2%</strong></div>
+        <div><span style="color: var(--color-text-secondary);">Land PSF:</span> <strong>RM 145</strong></div>
+        <div><span style="color: var(--color-text-secondary);">Score:</span> <strong>71/100</strong></div>
+      </div>
+    </div>
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+        <p style="font-size: 13px; font-weight: 500; margin: 0;">Seremban 2 — 28 Acres</p>
+        <span style="background: #E1F5EE; color: #085041; font-size: 10px; padding: 3px 8px; border-radius: 4px;">Due Diligence</span>
+      </div>
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0 0 8px;">Township • Freehold</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px;">
+        <div><span style="color: var(--color-text-secondary);">Est. GDV:</span> <strong>RM 290M</strong></div>
+        <div><span style="color: var(--color-text-secondary);">IRR:</span> <strong style="color: #1D9E75;">21.3%</strong></div>
+        <div><span style="color: var(--color-text-secondary);">Land PSF:</span> <strong>RM 52</strong></div>
+        <div><span style="color: var(--color-text-secondary);">Score:</span> <strong>89/100</strong></div>
+      </div>
+    </div>
+  </div>
+  
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Market Pricing Benchmark (RM PSF)</p>
+      <div style="position: relative; height: 220px;">
+        <canvas id="market-psf-chart"></canvas>
+      </div>
+    </div>
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Competitor Activity</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; font-weight: 500;">SP Setia</span>
+            <span style="font-size: 11px; color: var(--color-text-secondary);">Setia Alam Impian</span>
+          </div>
+          <p style="font-size: 11px; color: var(--color-text-secondary); margin: 4px 0 0;">Launch delayed to Q3 — opportunity window</p>
+        </div>
+        <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; font-weight: 500;">Mah Sing</span>
+            <span style="font-size: 11px; color: var(--color-text-secondary);">M Arisa @ Sentul</span>
+          </div>
+          <p style="font-size: 11px; color: var(--color-text-secondary); margin: 4px 0 0;">75% sold in 3 months — strong demand signal</p>
+        </div>
+        <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 12px; font-weight: 500;">Sime Darby Property</span>
+            <span style="font-size: 11px; color: var(--color-text-secondary);">Serenia City</span>
+          </div>
+          <p style="font-size: 11px; color: var(--color-text-secondary); margin: 4px 0 0;">Pricing at RM 650 PSF — above market avg</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <p style="font-size: 14px; font-weight: 500; margin: 24px 0 12px;">Malaysia Economic Indicators</p>
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">OPR (BNM)</p>
+      <p style="font-size: 18px; font-weight: 500; margin: 4px 0;">3.00%</p>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 0;">Held since May 2023</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">MIER HPI</p>
+      <p style="font-size: 18px; font-weight: 500; margin: 4px 0;">7.2</p>
+      <p style="font-size: 10px; color: #1D9E75; margin: 0;">↑ Positive outlook</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Unsold Units (NAPIC)</p>
+      <p style="font-size: 18px; font-weight: 500; margin: 4px 0;">24,768</p>
+      <p style="font-size: 10px; color: #1D9E75; margin: 0;">↓ 8% vs Q4'25</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Construction GDP</p>
+      <p style="font-size: 18px; font-weight: 500; margin: 4px 0;">+5.2%</p>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 0;">YoY Q1 2026</p>
+    </div>
+  </div>
+</div>
+
+<div id="module-workforce" style="display: none;">
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;">
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Total Workforce</p>
+      <p style="font-size: 20px; font-weight: 500; margin: 4px 0;">1,247</p>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 0;">Site: 892 | HQ: 355</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Output/Man-Day</p>
+      <p style="font-size: 20px; font-weight: 500; margin: 4px 0;">RM 842</p>
+      <p style="font-size: 10px; color: #1D9E75; margin: 0;">↑ 4.2% vs target</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Labour Cost/SQF</p>
+      <p style="font-size: 20px; font-weight: 500; margin: 4px 0;">RM 38</p>
+      <p style="font-size: 10px; color: #BA7517; margin: 0;">↑ 2.1% MoM</p>
+    </div>
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 12px;">
+      <p style="font-size: 11px; color: var(--color-text-secondary); margin: 0;">Utilisation Rate</p>
+      <p style="font-size: 20px; font-weight: 500; margin: 4px 0;">87%</p>
+      <p style="font-size: 10px; color: var(--color-text-secondary); margin: 0;">Target: 85%</p>
+    </div>
+  </div>
+  
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Workforce Mix by Site</p>
+      <div style="position: relative; height: 220px;">
+        <canvas id="workforce-mix-chart"></canvas>
+      </div>
+    </div>
+    <div>
+      <p style="font-size: 14px; font-weight: 500; margin: 0 0 12px;">Productivity Trend</p>
+      <div style="position: relative; height: 220px;">
+        <canvas id="productivity-trend-chart"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <p style="font-size: 14px; font-weight: 500; margin: 24px 0 12px;">Site Staffing Alerts</p>
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+    <div style="background: #FCEBEB; border-radius: var(--border-radius-md); padding: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 12px; font-weight: 500; color: #791F1F;">Mont Kiara — Understaffed</span>
+        <span style="font-size: 10px; background: #F7C1C1; color: #791F1F; padding: 2px 8px; border-radius: 4px;">Critical</span>
+      </div>
+      <p style="font-size: 11px; color: #A32D2D; margin: 0;">M&E team short 12 workers. Recommend: redeploy from Setia Alam (excess capacity).</p>
+    </div>
+    <div style="background: #FAEEDA; border-radius: var(--border-radius-md); padding: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-size: 12px; font-weight: 500; color: #633806;">Eco Horizon — Overtime Spike</span>
+        <span style="font-size: 10px; background: #FAC775; color: #633806; padding: 2px 8px; border-radius: 4px;">Warning</span>
+      </div>
+      <p style="font-size: 11px; color: #854F0B; margin: 0;">OT hours up 35% this month. Risk of burnout and cost overrun.</p>
+    </div>
+  </div>
+  
+  <p style="font-size: 14px; font-weight: 500; margin: 24px 0 12px;">Foreign Worker Compliance (FWCMS)</p>
+  <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+    <thead>
+      <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+        <th style="text-align: left; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Site</th>
+        <th style="text-align: right; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Foreign</th>
+        <th style="text-align: right; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Local</th>
+        <th style="text-align: right; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Ratio</th>
+        <th style="text-align: center; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Permit Expiry</th>
+        <th style="text-align: center; padding: 8px 0; color: var(--color-text-secondary); font-weight: 400;">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+        <td style="padding: 10px 0;">Setia Alam Ph3</td>
+        <td style="text-align: right; padding: 10px 0;">145</td>
+        <td style="text-align: right; padding: 10px 0;">87</td>
+        <td style="text-align: right; padding: 10px 0;">62%</td>
+        <td style="text-align: center; padding: 10px 0;">Aug 2026</td>
+        <td style="text-align: center; padding: 10px 0;"><span style="background: #E1F5EE; color: #085041; padding: 2px 8px; border-radius: 4px; font-size: 10px;">Compliant</span></td>
+      </tr>
+      <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+        <td style="padding: 10px 0;">Mont Kiara Res</td>
+        <td style="text-align: right; padding: 10px 0;">198</td>
+        <td style="text-align: right; padding: 10px 0;">62</td>
+        <td style="text-align: right; padding: 10px 0; color: #E24B4A;">76%</td>
+        <td style="text-align: center; padding: 10px 0; color: #E24B4A;">May 2026</td>
+        <td style="text-align: center; padding: 10px 0;"><span style="background: #FCEBEB; color: #791F1F; padding: 2px 8px; border-radius: 4px; font-size: 10px;">Renew Now</span></td>
+      </tr>
+      <tr>
+        <td style="padding: 10px 0;">Eco Horizon</td>
+        <td style="text-align: right; padding: 10px 0;">112</td>
+        <td style="text-align: right; padding: 10px 0;">78</td>
+        <td style="text-align: right; padding: 10px 0;">59%</td>
+        <td style="text-align: center; padding: 10px 0;">Oct 2026</td>
+        <td style="text-align: center; padding: 10px 0;"><span style="background: #E1F5EE; color: #085041; padding: 2px 8px; border-radius: 4px; font-size: 10px;">Compliant</span></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="margin-top: 24px; padding-top: 16px; border-top: 0.5px solid var(--color-border-tertiary); display: flex; gap: 8px; flex-wrap: wrap;">
+  <button onclick="sendPrompt('Show me a detailed breakdown of Mont Kiara cost overruns')" style="font-size: 12px; padding: 8px 14px;">Analyse Mont Kiara costs ↗</button>
+  <button onclick="sendPrompt('Run a feasibility stress test on the Rawang land opportunity')" style="font-size: 12px; padding: 8px 14px;">Stress test Rawang ↗</button>
+  <button onclick="sendPrompt('What workforce rebalancing do you recommend across sites?')" style="font-size: 12px; padding: 8px 14px;">Optimise workforce ↗</button>
+  <button onclick="sendPrompt('Generate a cashflow forecast for the next 180 days')" style="font-size: 12px; padding: 8px 14px;">180-day cashflow ↗</button>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+function switchModule(mod) {
+  ['exec','cost','timeline','opp','workforce'].forEach(m => {
+    document.getElementById('module-'+m).style.display = m===mod ? 'block' : 'none';
+    document.getElementById('tab-'+m).style.background = m===mod ? 'var(--color-background-info)' : 'transparent';
+    document.getElementById('tab-'+m).style.color = m===mod ? 'var(--color-text-info)' : 'var(--color-text-primary)';
+    document.getElementById('tab-'+m).style.border = m===mod ? 'none' : '0.5px solid var(--color-border-tertiary)';
+  });
+  initCharts(mod);
+}
+
+function initCharts(mod) {
+  const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.06)';
+  const textColor = isDark ? '#a0a0a0' : '#666';
+  
+  if (mod === 'exec' && !window.cashflowInit) {
+    window.cashflowInit = true;
+    new Chart(document.getElementById('cashflow-chart'), {
+      type: 'line',
+      data: {
+        labels: ['Apr','May','Jun','Jul','Aug','Sep'],
+        datasets: [
+          { label: 'Inflows', data: [45,52,48,61,55,58], borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.1)', fill: true, tension: 0.3 },
+          { label: 'Outflows', data: [38,42,51,48,52,49], borderColor: '#E24B4A', backgroundColor: 'rgba(226,75,74,0.1)', fill: true, tension: 0.3 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 15, color: textColor } } }, scales: { x: { grid: { display: false }, ticks: { color: textColor } }, y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => 'RM '+v+'M' } } } }
+    });
+  }
+  
+  if (mod === 'cost' && !window.costInit) {
+    window.costInit = true;
+    new Chart(document.getElementById('cost-trade-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Structure','M&E','Finishes','Prelims','External'],
+        datasets: [
+          { label: 'Budget', data: [15.2,8.5,6.2,4.8,3.1], backgroundColor: '#378ADD' },
+          { label: 'Actual', data: [14.8,9.8,5.9,5.2,3.0], backgroundColor: '#D85A30' }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 15, color: textColor } } }, scales: { x: { grid: { display: false }, ticks: { color: textColor } }, y: { grid: { color: gridColor }, ticks: { color: textColor } } } }
+    });
+    
+    new Chart(document.getElementById('vo-trend-chart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets: [
+          { label: 'VO Value (RM M)', data: [0.8,1.2,1.5,2.1,2.4,2.8], borderColor: '#D85A30', backgroundColor: 'rgba(216,90,48,0.1)', fill: true, tension: 0.3 },
+          { label: 'Threshold', data: [2,2,2,2,2,2], borderColor: '#888', borderDash: [5,5], pointRadius: 0 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 15, color: textColor } } }, scales: { x: { grid: { display: false }, ticks: { color: textColor } }, y: { grid: { color: gridColor }, ticks: { color: textColor } } } }
+    });
+  }
+  
+  if (mod === 'timeline' && !window.timelineInit) {
+    window.timelineInit = true;
+    new Chart(document.getElementById('delay-cause-chart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Authority Delays','Weather','Subcontractor','Material','Design Changes'],
+        datasets: [{ data: [35,22,18,15,10], backgroundColor: ['#378ADD','#5DCAA5','#D85A30','#EF9F27','#7F77DD'] }]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'right', labels: { boxWidth: 10, padding: 10, color: textColor } } } }
+    });
+  }
+  
+  if (mod === 'opp' && !window.oppInit) {
+    window.oppInit = true;
+    new Chart(document.getElementById('market-psf-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Mont Kiara','Bangsar','Damansara Heights','KLCC','Setia Alam','Cyberjaya'],
+        datasets: [
+          { label: 'Your Projects', data: [780,null,null,null,520,480], backgroundColor: '#1D9E75' },
+          { label: 'Market Avg', data: [820,950,880,1200,490,420], backgroundColor: '#378ADD' }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 15, color: textColor } } }, scales: { x: { grid: { display: false }, ticks: { color: textColor, maxRotation: 45 } }, y: { grid: { color: gridColor }, ticks: { color: textColor } } } }
+    });
+  }
+  
+  if (mod === 'workforce' && !window.workforceInit) {
+    window.workforceInit = true;
+    new Chart(document.getElementById('workforce-mix-chart'), {
+      type: 'bar',
+      data: {
+        labels: ['Setia Alam','Mont Kiara','Eco Horizon','Cyberjaya'],
+        datasets: [
+          { label: 'Local', data: [87,62,78,45], backgroundColor: '#378ADD' },
+          { label: 'Foreign', data: [145,198,112,85], backgroundColor: '#5DCAA5' }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 15, color: textColor } } }, scales: { x: { stacked: true, grid: { color: gridColor }, ticks: { color: textColor } }, y: { stacked: true, grid: { display: false }, ticks: { color: textColor } } } }
+    });
+    
+    new Chart(document.getElementById('productivity-trend-chart'), {
+      type: 'line',
+      data: {
+        labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets: [
+          { label: 'Output/Man-Day', data: [785,802,818,825,838,842], borderColor: '#1D9E75', tension: 0.3 },
+          { label: 'Target', data: [800,805,810,815,820,825], borderColor: '#888', borderDash: [5,5], pointRadius: 0 }
+        ]
+      },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { boxWidth: 10, padding: 15, color: textColor } } }, scales: { x: { grid: { display: false }, ticks: { color: textColor } }, y: { grid: { color: gridColor }, ticks: { color: textColor, callback: v => 'RM '+v } } } }
+    });
+  }
+}
+
+initCharts('exec');
+</script>
